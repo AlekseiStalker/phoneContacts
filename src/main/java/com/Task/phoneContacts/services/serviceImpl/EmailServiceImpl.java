@@ -4,7 +4,9 @@ import com.Task.phoneContacts.entities.ContactEmail;
 import com.Task.phoneContacts.repositories.EmailRepository;
 import com.Task.phoneContacts.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EmailServiceImpl implements EmailService {
 
     @Autowired

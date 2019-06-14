@@ -4,7 +4,9 @@ import com.Task.phoneContacts.entities.ContactPhone;
 import com.Task.phoneContacts.repositories.PhoneRepository;
 import com.Task.phoneContacts.services.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PhoneServiceImpl implements PhoneService {
 
     @Autowired

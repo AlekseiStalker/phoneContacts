@@ -1,12 +1,16 @@
 package com.Task.phoneContacts.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.Task.phoneContacts.services.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/home2")
 public class TestController {
+
+    @Autowired
+    private EmailService emailService;
+
     @RequestMapping(method = RequestMethod.GET)
     String get(){
         return "Hello from get";
@@ -26,5 +30,12 @@ public class TestController {
     @RequestMapping(method = RequestMethod.PATCH)
     String patch(){
         return "Hello from patch";
+    }
+
+
+    @GetMapping
+    public String SaveEmail(@RequestParam (name = "name", required = false, defaultValue = "def@com.ua") String name) {
+
+        return emailService.saveEmail();
     }
 }
