@@ -8,6 +8,7 @@ public class PhoneContactsApplication {
 
 	public static void main(String[] args) {
 
+
 		SpringApplication.run(PhoneContactsApplication.class, args);
 	}
 

@@ -12,6 +12,6 @@ public interface ContactRepository extends CrudRepository<Contact, Long> {
     List<Contact> findAll();
 
     Contact findByName(String name);
-    Contact findByEmail(String email);
-    Contact findByPhone(String phone);
+
+    void deleteContactByName(String name);
 }
