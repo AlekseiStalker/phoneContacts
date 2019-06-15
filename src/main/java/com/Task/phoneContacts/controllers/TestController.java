@@ -1,8 +1,13 @@
 package com.Task.phoneContacts.controllers;
 
 import com.Task.phoneContacts.entities.ContactEmail;
+//import com.Task.phoneContacts.entities.ContactPhone;
 import com.Task.phoneContacts.repositories.EmailRepository;
+//import com.Task.phoneContacts.repositories.PhoneRepository;
 import com.Task.phoneContacts.services.EmailService;
+
+import org.springframework.http.MediaType;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +42,32 @@ public class TestController {
 
     @Autowired
     EmailRepository emailRepository;
-
-    @PostMapping("/request") 
-    public ResponseEntity<ContactEmail> SaveEmail(@RequestBody ContactEmail email) {
-    	emailRepository.save(email);
-        return ResponseEntity.ok().body(email);
-    }
     
-    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
-    public String CountEmails() {
-    	return emailRepository.findAll().size() > 0 ? "yes" : "no";
+ 
+    @RequestMapping(value = "/requestEmail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ContactEmail SaveEmail(@RequestBody ContactEmail address) {
+    	return emailRepository.save(address); 
     }
+     
+    @RequestMapping(value = "/countEnmail", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ContactEmail> CountEmails() {
+    	return emailRepository.findAll();
+    }
+     
+//  @Autowired
+//  PhoneRepository phoneRepository;
+    
+//    @RequestMapping(value = "/requestPhone", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ContactPhone SavePhone(@RequestBody ContactPhone number) {
+//    	return phoneRepository.save(number); 
+//    }
+    
+//    @RequestMapping(value = "/countPhone", method = RequestMethod.GET)
+//    @ResponseBody
+//    public List<ContactPhone> CountPhone() {
+//    	return phoneRepository.findAll();
+//    }
 }

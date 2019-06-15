@@ -14,18 +14,22 @@ public class ContactEmail {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
 
-    @NotNull(message = "Email may not be null")
-    @NotEmpty
+//    @NotNull(message = "Email may not be null")
+//    @NotEmpty
+//    @Email
+//    @Pattern(regexp = ".+@.+\\..+",
+//            message = "Please provide a valid email address")
     private String address;
 
     @ManyToOne
-    @JoinColumn(name = "contact_id")
+    @JoinColumn(name = "email_contact_id")
     private Contact contact;
 
     public ContactEmail() { }
 
-    public ContactEmail(String address) {
+    public ContactEmail(String address, Contact contact) {
         this.address = address;
+        this.contact = contact;
     }
 
     public long getId() {
@@ -55,11 +59,7 @@ public class ContactEmail {
     @Override
     public String toString() {
         return String.format(
-                "Phone[id=%d, email='%s']",
+                "Phone[id=%d, address='%s']",
                 Id, address);
     }
 }
-
-//@Email
-//@Pattern(regexp = ".+@.+\\..+",
-//      message = "Please provide a valid email address")

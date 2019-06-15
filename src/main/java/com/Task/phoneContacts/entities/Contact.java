@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Set; 
 
 @Entity
 @Table(name = "Contact")
@@ -21,8 +21,8 @@ public class Contact {
     @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ContactEmail> contactEmails;
 
-    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ContactPhone> contactPhones;
+//    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<ContactPhone> contactPhones;
 
     public Contact() {}
 
@@ -30,7 +30,7 @@ public class Contact {
         this.name = name;
 
         contactEmails = new HashSet<>();
-        contactPhones = new HashSet<>();
+        //contactPhones = new HashSet<>();
     }
 
     public long getId() {
@@ -54,10 +54,26 @@ public class Contact {
         return contactEmails;
     }
 
-    public void setcontactPhones(Set<ContactPhone> contactPhones) {
-        this.contactPhones = contactPhones;
-    }
-    public Set<ContactPhone> getContactPhones() {
-        return contactPhones;
+//    public void setcontactPhones(Set<ContactPhone> contactPhones) {
+//        this.contactPhones = contactPhones;
+//    }
+//    public Set<ContactPhone> getContactPhones() {
+//        return contactPhones;
+//    }
+    
+    @Override
+    public String toString() {
+    	String result = String.format(
+                "Category[id=%d, name='%s']%n",
+                id, name);
+        if (contactEmails != null) {
+            for(ContactEmail e : contactEmails) {
+                result += String.format(
+                        "Book[id=%d, name='%s']%n",
+                        e.getId(), e.getEmail());
+            }
+        }
+
+        return result;
     }
 }
