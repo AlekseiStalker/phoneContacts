@@ -5,6 +5,8 @@ public class ContactDTO {
 	private String name;
 	
 	private String emails[];
+	
+	public ContactDTO() {}
 
 	public String getName() {
 		return name;

@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 public class ContactEmail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
 
 //    @NotNull(message = "Email may not be null")

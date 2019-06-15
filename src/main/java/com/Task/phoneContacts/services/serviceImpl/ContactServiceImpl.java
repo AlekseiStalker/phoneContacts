@@ -24,45 +24,32 @@ public class ContactServiceImpl implements ContactService {
 	
     @Autowired
     private ContactRepository contactRepository;
-
-    @Override
-    public Contact findByContactName(String name) {
-        return contactRepository.findByName(name);
-    }
-    
-//    @Override
-//    public Contact createContact(Contact contact, Set<ContactEmail> contactEmails) {
-//    	Contact tempContact = contactRepository.findByName(contact.getName());
-//    	
-//    	if(tempContact != null) {
-//    		LOG.info("Contact with name {} already exist. Nothing will be done. ", contact.getName());
-//    	} else {
-//    		contact.setContactEmails(contactEmails); 
-//    	}
-//    	return contactRepository.save(contact);
-//    }
-    
+ 
     @Override
     public ContactDTO createContact(ContactDTO newContact) { 
     	 
     	if(checkContactExists(newContact.getName())) {
     		throw new ContactAlreadyExistsException(newContact.getName());
-    	} else {
-//    		Contact contact = new Contact(newContact.getName());
-//    		
-//    		Set<ContactEmail> cEmails = new HashSet<>();
-//    		for(String emailAddress : newContact.getEmails()) {
-//    			cEmails.add(new ContactEmail(emailAddress, contact));
-//    		}
-//    		
-//    		contact.setContactEmails(cEmails); 
-    		
+    	} else {  
     		Contact contact = convertToEntity(newContact);
         	Contact contactCreated = contactRepository.save(contact);
-            return convertToDto(contactCreated);
- 
+            return convertToDto(contactCreated); 
     	}
     }
+     
+    @Override
+    public boolean checkContactExists(String name) {
+        if (findByContactName(name) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }  
+     
+    @Override
+    public Contact findByContactName(String name) {
+        return contactRepository.findByName(name);
+    } 
     
     private Contact convertToEntity(ContactDTO contactDTO) {
     	Contact contact = new Contact(contactDTO.getName());  
@@ -70,7 +57,9 @@ public class ContactServiceImpl implements ContactService {
     	
     	for(String address : contactDTO.getEmails()) {
     		contactEmails.add(new ContactEmail(address, contact));
-    	}
+    	} 
+    	
+    	contact.setContactEmails(contactEmails);
     	
         return contact;
     }
@@ -90,36 +79,28 @@ public class ContactServiceImpl implements ContactService {
         return contactDto;
     }
 
-    @Override
-    public boolean checkContactExists(String name) {
-        if (findByContactName(name) != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }  
-
-    @Override
-    public void deleteContact(String name) {
-        contactRepository.deleteContactByName(name);
-    }
 
     @Override
     public List<Contact> getContactList() {
         return contactRepository.findAll();
     }
-
-	@Override
-	public boolean checkEmailExistsForContact(Contact contact, String email) {
-		Set<ContactEmail> contactEmails = contact.getContactEmails();
-		
-		for(ContactEmail e : contactEmails) {
-			if(e.getEmail() == email) {
-				return true;
-			}
-		} 
-		return false;
-	}
+    
+//  @Override
+//  public void deleteContact(String name) {
+//      contactRepository.deleteContactByName(name);
+//  }
+    
+//	@Override
+//	public boolean checkEmailExistsForContact(Contact contact, String email) {
+//		Set<ContactEmail> contactEmails = contact.getContactEmails();
+//		
+//		for(ContactEmail e : contactEmails) {
+//			if(e.getEmail() == email) {
+//				return true;
+//			}
+//		} 
+//		return false;
+//	}
 
 //	@Override
 //	public Contact createContact(ContactDTO contact) {

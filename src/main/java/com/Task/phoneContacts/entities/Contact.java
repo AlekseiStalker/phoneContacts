@@ -11,7 +11,7 @@ import java.util.Set;
 public class Contact {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull(message = "Name may not be null")
@@ -63,15 +63,13 @@ public class Contact {
     
     @Override
     public String toString() {
-    	String result = String.format(
-                "Category[id=%d, name='%s']%n",
-                id, name);
+    	String result = "Contact[id=" + id + " name=" + name + "]\n";
         if (contactEmails != null) {
+        	result += "emails: ";
             for(ContactEmail e : contactEmails) {
-                result += String.format(
-                        "Book[id=%d, name='%s']%n",
-                        e.getId(), e.getEmail());
+                result += "{ " + e.getEmail() + " } ";
             }
+            //add phones
         }
 
         return result;

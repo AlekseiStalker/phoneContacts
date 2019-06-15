@@ -4,6 +4,7 @@ package com.Task.phoneContacts.controllers;
 import com.Task.phoneContacts.entities.Contact;
 import com.Task.phoneContacts.entities.ContactEmail;
 import com.Task.phoneContacts.entities.ContactDTO.ContactDTO;
+import com.Task.phoneContacts.errors.ContactAlreadyExistsException;
 import com.Task.phoneContacts.errors.ContactNotFoundException;
 import com.Task.phoneContacts.repositories.ContactRepository;
 import org.springframework.http.HttpStatus;
@@ -33,69 +34,43 @@ public class ContactController {
     private ContactRepository contactRepository;
 
     //FindALL
-    @RequestMapping(value = "/contacts", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     List<Contact> findAll() {
-        return contactRepository.findAll();
+        return contactService.getContactList();
     }
-
-    //FindOne
-    @RequestMapping(value = "contact/{id}", method = RequestMethod.GET)
-    @ResponseBody 
-    public Contact findOne(@PathVariable Long id) {
-        Optional<Contact> contact = contactRepository.findById(id);
-        if (contact.isPresent()) {
-            return contact.get();
-        } else {
-            throw new ContactNotFoundException(id);
-        }
-    }
-
-    //create
-//    @RequestMapping(value = "/newContact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody 
-//    @ResponseStatus(HttpStatus.CREATED)
-//    Contact newContact(@RequestBody Contact newContact) {
-//        return contactRepository.save(newContact);
-//    }
     
-   
+    //CountContacts
+    @RequestMapping(value = "/count", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    int countAll() {
+        return contactService.getContactList().size();
+    }
+    
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public String getContactById(@RequestParam long id) {
+    	return contactRepository.findById(id).get().toString();
+    }
+ 
     @RequestMapping(value = "/newContact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public ContactDTO newContact(@RequestBody ContactDTO contactDto) {
-    	Contact contact = convertToEntity(contactDto);
-    	Contact contactCreated = contactService.createContact(contact);//here try catch
-        return convertToDto(contactCreated);
-    }
-    
-    
-    private Contact convertToEntity(ContactDTO contactDTO) throws ParseException {
-    	Contact contact = new Contact(contactDTO.getName());  
-    	Set<ContactEmail> contactEmails = new HashSet<>();
-    	
-    	for(String address : contactDTO.getEmails()) {
-    		contactEmails.add(new ContactEmail(address, contact));
-    	}
-    	
-        return contact;
-    }
+    public ContactDTO newContact(@RequestBody ContactDTO contactDto) throws ContactAlreadyExistsException  { 
+        return contactService.createContact(contactDto);
+    } 
      
-    private ContactDTO convertToDto(Contact contact) {
-        ContactDTO contactDto = new ContactDTO();  
-        contactDto.setName(contact.getName());
-         
-        String contactEmails[] = new String[contact.getContactEmails().size()]; 
-        int i = 0;
-        for(ContactEmail e: contact.getContactEmails()) {
-        	contactEmails[i++] = e.getEmail();
-        }
-        
-        contactDto.setEmails(contactEmails);
-        
-        return contactDto;
-    }
-
+//  //FindOne
+//  @RequestMapping(value = "/contact/{id}", method = RequestMethod.GET)
+//  @ResponseBody 
+//  public Contact findOne(@PathVariable Long id) {
+//      Optional<Contact> contact = contactRepository.findById(id);
+//      if (contact.isPresent()) {
+//          return contact.get();
+//      } else {
+//          throw new ContactNotFoundException(id);//make find by name and share login into service
+//      }
+//  }
+    
     // Update or save 
 //    @RequestMapping(value = "/contacts/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseBody  
@@ -113,3 +88,32 @@ public class ContactController {
 //                });
 //    }
 }
+
+
+//create
+//@RequestMapping(value = "/newContact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//@ResponseBody 
+//@ResponseStatus(HttpStatus.CREATED)
+//Contact newContact(@RequestBody Contact newContact) {
+//    return contactRepository.save(newContact);
+//}
+
+//@RequestMapping(value = "/checkContact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//@ResponseBody
+//@ResponseStatus(HttpStatus.CREATED)
+//public String checkContact(@RequestBody ContactDTO contactDto)  { 
+//    return convertToEntity(contactDto).toString();
+//} 
+//
+//private Contact convertToEntity(ContactDTO contactDTO) {
+//	Contact contact = new Contact(contactDTO.getName());  
+//	Set<ContactEmail> contactEmails = new HashSet<>();
+//	
+//	for(String address : contactDTO.getEmails()) {
+//		contactEmails.add(new ContactEmail(address, contact));
+//	}
+//	
+//	contact.setContactEmails(contactEmails);
+//	
+//    return contact;
+//}
