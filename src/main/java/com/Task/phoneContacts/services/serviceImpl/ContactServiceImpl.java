@@ -6,11 +6,15 @@ import java.util.Set;
 
 import com.Task.phoneContacts.entities.Contact;
 import com.Task.phoneContacts.entities.ContactEmail;
+import com.Task.phoneContacts.entities.ContactDTO.ContactDTO;
+import com.Task.phoneContacts.errors.ContactAlreadyExistsException;
 import com.Task.phoneContacts.repositories.ContactRepository;
 import com.Task.phoneContacts.services.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -26,16 +30,64 @@ public class ContactServiceImpl implements ContactService {
         return contactRepository.findByName(name);
     }
     
+//    @Override
+//    public Contact createContact(Contact contact, Set<ContactEmail> contactEmails) {
+//    	Contact tempContact = contactRepository.findByName(contact.getName());
+//    	
+//    	if(tempContact != null) {
+//    		LOG.info("Contact with name {} already exist. Nothing will be done. ", contact.getName());
+//    	} else {
+//    		contact.setContactEmails(contactEmails); 
+//    	}
+//    	return contactRepository.save(contact);
+//    }
+    
     @Override
-    public Contact createContact(Contact contact, Set<ContactEmail> contactEmails) {
-    	Contact tempContact = contactRepository.findByName(contact.getName());
-    	
-    	if(tempContact != null) {
-    		LOG.info("Contact with name {} already exist. Nothing will be done. ", contact.getName());
+    public ContactDTO createContact(ContactDTO newContact) { 
+    	 
+    	if(checkContactExists(newContact.getName())) {
+    		throw new ContactAlreadyExistsException(newContact.getName());
     	} else {
-    		contact.setContactEmails(contactEmails); 
+//    		Contact contact = new Contact(newContact.getName());
+//    		
+//    		Set<ContactEmail> cEmails = new HashSet<>();
+//    		for(String emailAddress : newContact.getEmails()) {
+//    			cEmails.add(new ContactEmail(emailAddress, contact));
+//    		}
+//    		
+//    		contact.setContactEmails(cEmails); 
+    		
+    		Contact contact = convertToEntity(newContact);
+        	Contact contactCreated = contactRepository.save(contact);
+            return convertToDto(contactCreated);
+ 
     	}
-    	return contactRepository.save(contact);
+    }
+    
+    private Contact convertToEntity(ContactDTO contactDTO) {
+    	Contact contact = new Contact(contactDTO.getName());  
+    	Set<ContactEmail> contactEmails = new HashSet<>();
+    	
+    	for(String address : contactDTO.getEmails()) {
+    		contactEmails.add(new ContactEmail(address, contact));
+    	}
+    	
+        return contact;
+    }
+     
+    private ContactDTO convertToDto(Contact contact) {
+        ContactDTO contactDto = new ContactDTO();  
+        contactDto.setName(contact.getName());
+         
+        String contactEmails[] = new String[contact.getContactEmails().size()]; 
+        int i = 0;
+        for(ContactEmail e: contact.getContactEmails()) {
+        	contactEmails[i++] = e.getEmail();
+        }
+        
+        contactDto.setEmails(contactEmails);
+        
+        return contactDto;
     }
 
     @Override
@@ -45,12 +97,7 @@ public class ContactServiceImpl implements ContactService {
         } else {
             return false;
         }
-    } 
-
-    @Override
-    public Contact saveContact(Contact contact) {
-        return contactRepository.save(contact);
-    }
+    }  
 
     @Override
     public void deleteContact(String name) {
@@ -73,5 +120,19 @@ public class ContactServiceImpl implements ContactService {
 		} 
 		return false;
 	}
+
+//	@Override
+//	public Contact createContact(ContactDTO contact) {
+//		Contact resContact = new Contact(contact.getName());
+//		
+//		Set<ContactEmail> cEmails = new HashSet<>();
+//		for(String emailAddress : contact.getEmails()) {
+//			cEmails.add(new ContactEmail(emailAddress, resContact));
+//		}
+//	
+//		resContact.setContactEmails(cEmails); 
+//		
+//		return contactRepository.save(resContact); 
+//	}
  
 }
