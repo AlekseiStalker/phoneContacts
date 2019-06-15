@@ -18,7 +18,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public boolean isEmailExists(String email) {
+    public boolean isEmailExists(String address) {
         return false;
     }
 }

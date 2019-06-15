@@ -12,8 +12,8 @@ public interface PhoneRepository extends CrudRepository<ContactPhone, Long> {
     @Override
     List<ContactPhone> findAll();
 
-    //ContactPhone findByName(String phoneName);
+    ContactPhone findByNumber(String number);
 
-    //void deletePhoneByName(String name);
+    void deleteByNumber(String number);
 }
 

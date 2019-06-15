@@ -11,15 +11,12 @@ import javax.validation.constraints.Pattern;
 public class ContactEmail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long emailId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long Id;
 
     @NotNull(message = "Email may not be null")
     @NotEmpty
-    @Email
-    @Pattern(regexp = ".+@.+\\..+",
-            message = "Please provide a valid email address")
-    private String email;
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "contact_id")
@@ -27,24 +24,24 @@ public class ContactEmail {
 
     public ContactEmail() { }
 
-    public ContactEmail(String email) {
-        this.email = email;
+    public ContactEmail(String address) {
+        this.address = address;
     }
 
     public long getId() {
-        return emailId;
+        return Id;
     }
 
     public void setId(long id) {
-        this.emailId = id;
+        this.Id = id;
     }
 
     public String getEmail() {
-        return email;
+        return address;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String address) {
+        this.address = address;
     }
 
     public Contact getContact() {
@@ -59,6 +56,10 @@ public class ContactEmail {
     public String toString() {
         return String.format(
                 "Phone[id=%d, email='%s']",
-                emailId, email);
+                Id, address);
     }
 }
+
+//@Email
+//@Pattern(regexp = ".+@.+\\..+",
+//      message = "Please provide a valid email address")

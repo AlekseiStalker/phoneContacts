@@ -11,7 +11,7 @@ import java.util.Set;
 public class Contact {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @NotNull(message = "Name may not be null")

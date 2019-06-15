@@ -12,7 +12,7 @@ public interface EmailRepository extends CrudRepository<ContactEmail, Long> {
     @Override
     List<ContactEmail> findAll();
 
-    //ContactEmail findByName(String name);
+    ContactEmail findByAddress(String address);
 
-    //void deleteEmailByName(String name);
+    void deleteByAddress(String address);
 }

@@ -1,17 +1,20 @@
 package com.Task.phoneContacts.controllers;
 
+import com.Task.phoneContacts.entities.ContactEmail;
+import com.Task.phoneContacts.repositories.EmailRepository;
 import com.Task.phoneContacts.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/home2")
+@RequestMapping("/home")
 public class TestController {
 
     @Autowired
     private EmailService emailService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/checkGet", method = RequestMethod.GET)
     String get(){
         return "Hello from get";
     }
@@ -32,10 +35,17 @@ public class TestController {
         return "Hello from patch";
     }
 
+    @Autowired
+    EmailRepository emailRepository;
 
-    @GetMapping
-    public String SaveEmail(@RequestParam (name = "name", required = false, defaultValue = "def@com.ua") String name) {
-
-        return emailService.saveEmail();
+    @PostMapping("/request") 
+    public ResponseEntity<ContactEmail> SaveEmail(@RequestBody ContactEmail email) {
+    	emailRepository.save(email);
+        return ResponseEntity.ok().body(email);
+    }
+    
+    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
+    public String CountEmails() {
+    	return emailRepository.findAll().size() > 0 ? "yes" : "no";
     }
 }

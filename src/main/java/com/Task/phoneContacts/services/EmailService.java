@@ -6,5 +6,5 @@ public interface EmailService {
 
     ContactEmail saveEmail(ContactEmail email);
 
-    boolean isEmailExists(String email);
+    boolean isEmailExists(String address);
 }

@@ -7,5 +7,5 @@ public interface PhoneService {
 
     ContactPhone savePhone(ContactPhone phone);
 
-    boolean isPhoneExists(String phone);
+    boolean isPhoneExists(String number);
 }

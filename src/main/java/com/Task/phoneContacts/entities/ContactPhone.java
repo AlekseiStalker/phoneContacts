@@ -11,8 +11,8 @@ import javax.validation.constraints.Size;
 public class ContactPhone {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long phoneId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long Id;
 
     @NotNull(message = "Phone may not be null")
     @NotEmpty
@@ -20,7 +20,7 @@ public class ContactPhone {
     @Pattern(regexp = "\\d{3}-?\\d{3}-?\\d{2}-?\\d{2}|" +
             "[+\\d{1,3}]?\\d{3}-?\\d{3}-?\\d{2}-?\\d{2}",
             message = "Please provide a valid phone number")
-    private String phone;
+    private String number;
 
     @ManyToOne
     @JoinColumn(name = "contact_id")
@@ -29,23 +29,23 @@ public class ContactPhone {
     public ContactPhone() {}
 
     public ContactPhone(String phone) {
-        this.phone = phone;
+        this.number = phone;
     }
 
     public long getId() {
-        return phoneId;
+        return Id;
     }
 
     public void setId(long id) {
-        this.phoneId = id;
+        this.Id = id;
     }
 
     public String getPhone() {
-        return phone;
+        return number;
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.number = phone;
     }
 
     public Contact getContact() {
@@ -60,6 +60,6 @@ public class ContactPhone {
     public String toString() {
         return String.format(
                 "Phone[id=%d, phone='%s']",
-                phoneId, phone);
+                Id, number);
     }
 }
