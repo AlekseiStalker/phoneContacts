@@ -88,6 +88,22 @@ public class Contact {
             return false;
         
         Contact other = (Contact) obj;
-        return Objects.equals(id, other.getId());
+
+        //return Objects.equals(id, other.getId());
+        
+        if(this.contactEmails.size() != other.contactEmails.size()) {
+        	return false;
+        }
+        
+        ContactEmail[] thisEmails = contactEmails.toArray(new ContactEmail[0]); 
+        ContactEmail[] otherEmails = other.getContactEmails().toArray(new ContactEmail[0]);
+        
+        for(int i = 0; i < thisEmails.length; i++) {
+        	if(!thisEmails[i].equals(otherEmails[i])) {
+        		return false;
+        	}
+        }
+        
+        return true;
     }
 }

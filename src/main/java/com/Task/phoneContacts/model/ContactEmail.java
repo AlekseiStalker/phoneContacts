@@ -64,4 +64,20 @@ public class ContactEmail {
                 "Phone[id=%d, address='%s']",
                 id, address);
     } 
+    
+    @Override
+    public int hashCode() { 
+        return address.hashCode();
+    }
+ 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        
+        ContactEmail other = (ContactEmail) obj;
+ 
+        return this.address == other.getAddress();
+    }
+    
 }

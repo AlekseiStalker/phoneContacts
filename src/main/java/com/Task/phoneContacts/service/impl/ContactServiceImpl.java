@@ -117,7 +117,7 @@ public class ContactServiceImpl implements ContactService {
     }  
       
     private boolean isEmailUnique(Set<ContactEmail> oldEmails, String... newEmails) { 
-    	ContactEmail[] oldEmailsArr = (ContactEmail[])oldEmails.toArray();
+    	ContactEmail[] oldEmailsArr = oldEmails.toArray(new ContactEmail[0]);
     	List<String> newEmailsList = Arrays.asList(newEmails);
     	
     	for(int i = 0; i < newEmails.length; i++) {

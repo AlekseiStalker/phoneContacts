@@ -26,8 +26,7 @@ public class ContactController {
         return "Hello World!";
     } 
    
-    @RequestMapping(value = "/count", method = RequestMethod.GET)
-    @ResponseBody 
+    @RequestMapping(value = "/count", method = RequestMethod.GET) 
     int countAll() {
         return contactService.getContacts().size();
     }
@@ -39,8 +38,7 @@ public class ContactController {
     	return contactService.getContacts();
     }
     
-    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE) 
     @ResponseStatus(HttpStatus.CREATED)
     public ContactDTO create(@RequestBody ContactDTO contactDto) { 
         return contactService.createContact(contactDto);
