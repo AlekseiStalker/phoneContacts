@@ -8,18 +8,14 @@ import java.util.List;
 import java.util.Set;
 
 public interface ContactService {
+ 
+    ContactDTO createContact(ContactDTO contactDto);
+    	  
+    ContactDTO getContactById(Long id);
+    
+    ContactDTO updateContactById(Long id, ContactDTO contactDto); 
+    
+    ContactDTO deleteContactById(Long id); 
 
-    Contact findByContactName(String name);
-     
-    ContactDTO createContact(ContactDTO newContact);
-    	 
-    boolean checkContactExists(String name);
-
-    //boolean checkEmailExistsForContact(Contact contact, String email);
-
-    //boolean checkPhoneExists(String phone); 
-
-    //void deleteContact(String name);
-
-    List<Contact> getContactList();
+    List<ContactDTO> getContacts();
 }

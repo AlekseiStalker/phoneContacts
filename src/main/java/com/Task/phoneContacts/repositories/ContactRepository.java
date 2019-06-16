@@ -12,10 +12,6 @@ public interface ContactRepository extends CrudRepository<Contact, Long> {
 
     @Override
     List<Contact> findAll();
-
-    Optional<Contact> findById(Long id);
-    
-    Contact findByName(String name);
-
-    void deleteContactByName(String name);
+ 
+    Contact findByName(String name); 
 }

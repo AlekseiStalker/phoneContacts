@@ -1,5 +1,7 @@
 package com.Task.phoneContacts.entities;
 
+import java.util.Objects;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -40,11 +42,11 @@ public class ContactEmail {
         this.Id = id;
     }
 
-    public String getEmail() {
+    public String getAddress() {
         return address;
     }
 
-    public void setEmail(String address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
@@ -61,5 +63,5 @@ public class ContactEmail {
         return String.format(
                 "Phone[id=%d, address='%s']",
                 Id, address);
-    }
+    } 
 }

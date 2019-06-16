@@ -8,14 +8,15 @@ import com.Task.phoneContacts.entities.Contact;
 import com.Task.phoneContacts.entities.ContactEmail;
 import com.Task.phoneContacts.entities.ContactDTO.ContactDTO;
 import com.Task.phoneContacts.errors.ContactAlreadyExistsException;
+import com.Task.phoneContacts.errors.EmailAlreadyExistsException;
 import com.Task.phoneContacts.repositories.ContactRepository;
 import com.Task.phoneContacts.services.ContactService;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.util.HashSet;
-import java.util.List;
+ 
+import java.util.*;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -26,30 +27,62 @@ public class ContactServiceImpl implements ContactService {
     private ContactRepository contactRepository;
  
     @Override
-    public ContactDTO createContact(ContactDTO newContact) { 
+    public ContactDTO createContact(ContactDTO contactDto) { 
     	 
-    	if(checkContactExists(newContact.getName())) {
-    		throw new ContactAlreadyExistsException(newContact.getName());
+    	if(!isNameUnique(contactDto.getName())) {
+    		throw new ContactAlreadyExistsException(contactDto.getName());
     	} else {  
-    		Contact contact = convertToEntity(newContact);
-        	Contact contactCreated = contactRepository.save(contact);
-            return convertToDto(contactCreated); 
+    		Contact contact = convertToEntity(contactDto);
+        	Contact createdContact = contactRepository.save(contact);
+            return convertToDto(createdContact); 
     	}
+    } 
+    
+	@Override
+	public ContactDTO getContactById(Long id) {
+		Optional<Contact> contact = contactRepository.findById(id);
+		return convertToDto(contact.get());
+	}
+ 
+	@Override
+	public ContactDTO updateContactById(Long id, ContactDTO contactDto) { 
+		if(!isNameUnique(contactDto.getName())) {
+			throw new ContactAlreadyExistsException(contactDto.getName());
+		}
+
+		Contact oldContact = contactRepository.findById(id).get();
+		
+		if(!isEmailUnique(oldContact.getContactEmails(), contactDto.getEmails())) {
+			throw new EmailAlreadyExistsException();
+		} 
+		//if() make for phones
+		
+		Contact newContact = convertToEntity(contactDto); 
+		
+		BeanUtils.copyProperties(newContact, oldContact);
+		 
+		Contact updatedContact = contactRepository.save(oldContact);
+		
+		return convertToDto(updatedContact);
+	}  
+ 
+    @Override
+    public List<ContactDTO> getContacts() {
+    	List<Contact> contacts = contactRepository.findAll();
+    	
+    	List<ContactDTO> contatcsDto = new ArrayList<>();
+    	for(Contact c : contacts)
+    		contatcsDto.add(convertToDto(c));
+    	
+        return contatcsDto;
     }
      
-    @Override
-    public boolean checkContactExists(String name) {
-        if (findByContactName(name) != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }  
-     
-    @Override
-    public Contact findByContactName(String name) {
-        return contactRepository.findByName(name);
-    } 
+	@Override
+	public ContactDTO deleteContactById(Long id) {
+		Contact contact = contactRepository.findById(id).get();
+		contactRepository.deleteById(id);
+		return convertToDto(contact);
+	} 
     
     private Contact convertToEntity(ContactDTO contactDTO) {
     	Contact contact = new Contact(contactDTO.getName());  
@@ -71,7 +104,7 @@ public class ContactServiceImpl implements ContactService {
         String contactEmails[] = new String[contact.getContactEmails().size()]; 
         int i = 0;
         for(ContactEmail e: contact.getContactEmails()) {
-        	contactEmails[i++] = e.getEmail();
+        	contactEmails[i++] = e.getAddress();
         }
         
         contactDto.setEmails(contactEmails);
@@ -79,41 +112,23 @@ public class ContactServiceImpl implements ContactService {
         return contactDto;
     }
 
-
-    @Override
-    public List<Contact> getContactList() {
-        return contactRepository.findAll();
+    private boolean isNameUnique(String name) {
+        return findByContactName(name) == null;
+    }  
+      
+    private boolean isEmailUnique(Set<ContactEmail> oldEmails, String... newEmails) { 
+    	ContactEmail[] oldEmailsArr = (ContactEmail[])oldEmails.toArray();
+    	List<String> newEmailsList = Arrays.asList(newEmails);
+    	
+    	for(int i = 0; i < newEmails.length; i++) {
+    		if(newEmailsList.contains(oldEmailsArr[i].getAddress())) {
+    			return false;
+    		}
+    	}
+    	return true;
+    } 
+     
+    private Contact findByContactName(String name) {
+        return contactRepository.findByName(name);
     }
-    
-//  @Override
-//  public void deleteContact(String name) {
-//      contactRepository.deleteContactByName(name);
-//  }
-    
-//	@Override
-//	public boolean checkEmailExistsForContact(Contact contact, String email) {
-//		Set<ContactEmail> contactEmails = contact.getContactEmails();
-//		
-//		for(ContactEmail e : contactEmails) {
-//			if(e.getEmail() == email) {
-//				return true;
-//			}
-//		} 
-//		return false;
-//	}
-
-//	@Override
-//	public Contact createContact(ContactDTO contact) {
-//		Contact resContact = new Contact(contact.getName());
-//		
-//		Set<ContactEmail> cEmails = new HashSet<>();
-//		for(String emailAddress : contact.getEmails()) {
-//			cEmails.add(new ContactEmail(emailAddress, resContact));
-//		}
-//	
-//		resContact.setContactEmails(cEmails); 
-//		
-//		return contactRepository.save(resContact); 
-//	}
- 
 }

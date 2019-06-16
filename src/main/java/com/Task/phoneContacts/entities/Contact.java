@@ -67,7 +67,7 @@ public class Contact {
         if (contactEmails != null) {
         	result += "emails: ";
             for(ContactEmail e : contactEmails) {
-                result += "{ " + e.getEmail() + " } ";
+                result += "{ " + e.getAddress() + " } ";
             }
             //add phones
         }
