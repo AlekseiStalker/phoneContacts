@@ -1,18 +1,15 @@
-package com.Task.phoneContacts.services.serviceImpl;
+package com.Task.phoneContacts.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Set;
 
-import com.Task.phoneContacts.entities.Contact;
-import com.Task.phoneContacts.entities.ContactEmail;
-import com.Task.phoneContacts.entities.ContactDTO.ContactDTO;
-import com.Task.phoneContacts.errors.ContactAlreadyExistsException;
-import com.Task.phoneContacts.errors.EmailAlreadyExistsException;
-import com.Task.phoneContacts.repositories.ContactRepository;
-import com.Task.phoneContacts.services.ContactService;
-
-import org.springframework.beans.BeanUtils;
+import com.Task.phoneContacts.model.*;
+import com.Task.phoneContacts.dto.ContactDTO;
+import com.Task.phoneContacts.error.*;
+import com.Task.phoneContacts.repository.ContactRepository;
+import com.Task.phoneContacts.service.ContactService;
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
  
@@ -27,20 +24,25 @@ public class ContactServiceImpl implements ContactService {
     private ContactRepository contactRepository;
  
     @Override
-    public ContactDTO createContact(ContactDTO contactDto) { 
-    	 
+    public ContactDTO createContact(ContactDTO contactDto) {  
     	if(!isNameUnique(contactDto.getName())) {
     		throw new ContactAlreadyExistsException(contactDto.getName());
-    	} else {  
-    		Contact contact = convertToEntity(contactDto);
-        	Contact createdContact = contactRepository.save(contact);
-            return convertToDto(createdContact); 
-    	}
+    	} 
+    	
+    	Contact createdContact = convertToEntity(contactDto);
+    	createdContact = contactRepository.save(createdContact);
+    	
+        return convertToDto(createdContact); 
     } 
     
 	@Override
 	public ContactDTO getContactById(Long id) {
-		Optional<Contact> contact = contactRepository.findById(id);
+		Optional<Contact> contact = contactRepository.findById(id); 
+		
+		if (!contact.isPresent()) {
+			throw new ContactNotFoundException(id);
+		} 
+		
 		return convertToDto(contact.get());
 	}
  
@@ -50,18 +52,16 @@ public class ContactServiceImpl implements ContactService {
 			throw new ContactAlreadyExistsException(contactDto.getName());
 		}
 
-		Contact oldContact = contactRepository.findById(id).get();
-		
-		if(!isEmailUnique(oldContact.getContactEmails(), contactDto.getEmails())) {
+		Contact contact = contactRepository.findById(id).get();
+		 
+		if(!isEmailUnique(contact.getContactEmails(), contactDto.getEmails())) {
 			throw new EmailAlreadyExistsException();
 		} 
 		//if() make for phones
-		
-		Contact newContact = convertToEntity(contactDto); 
-		
-		BeanUtils.copyProperties(newContact, oldContact);
 		 
-		Contact updatedContact = contactRepository.save(oldContact);
+		updateContactProperties(contactDto, contact);
+		 
+		Contact updatedContact = contactRepository.save(contact);
 		
 		return convertToDto(updatedContact);
 	}  
@@ -78,10 +78,10 @@ public class ContactServiceImpl implements ContactService {
     }
      
 	@Override
-	public ContactDTO deleteContactById(Long id) {
+	public boolean deleteContactById(Long id) {
 		Contact contact = contactRepository.findById(id).get();
 		contactRepository.deleteById(id);
-		return convertToDto(contact);
+		return true;
 	} 
     
     private Contact convertToEntity(ContactDTO contactDTO) {
@@ -127,6 +127,23 @@ public class ContactServiceImpl implements ContactService {
     	}
     	return true;
     } 
+    
+    private void updateContactProperties(ContactDTO newContact, Contact oldContact) {
+    	if(newContact.getName() != "") {
+    		oldContact.setName(newContact.getName());
+    	}
+    	
+    	if(newContact.getEmails().length != 0) {
+    		Set<ContactEmail> contactEmails = oldContact.getContactEmails(); 
+    		String[] newEmails = newContact.getEmails();
+    		for(int i = 0; i < newEmails.length; i++) {
+    			contactEmails.add(new ContactEmail(newEmails[i], oldContact));
+    		}
+    		oldContact.setContactEmails(contactEmails);
+    	}
+    	
+    	//make for phones
+    }
      
     private Contact findByContactName(String name) {
         return contactRepository.findByName(name);

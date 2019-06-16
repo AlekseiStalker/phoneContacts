@@ -1,8 +1,7 @@
-package com.Task.phoneContacts.repositories;
+package com.Task.phoneContacts.repository;
 
-import com.Task.phoneContacts.entities.Contact;
-import java.util.List;
-import java.util.Optional;
+import com.Task.phoneContacts.model.Contact;
+import java.util.List; 
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

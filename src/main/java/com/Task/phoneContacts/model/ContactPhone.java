@@ -12,7 +12,7 @@
 //
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private long Id;
+//    private long id;
 //
 //    @NotNull(message = "Phone may not be null")
 //    @NotEmpty

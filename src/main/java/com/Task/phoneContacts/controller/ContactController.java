@@ -1,19 +1,13 @@
 
-package com.Task.phoneContacts.controllers;
-
-import com.Task.phoneContacts.entities.Contact;
-import com.Task.phoneContacts.entities.ContactEmail;
-import com.Task.phoneContacts.entities.ContactDTO.ContactDTO;
-import com.Task.phoneContacts.errors.ContactAlreadyExistsException;
-import com.Task.phoneContacts.errors.ContactNotFoundException;
-import com.Task.phoneContacts.repositories.ContactRepository;
+package com.Task.phoneContacts.controller;
+   
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.Task.phoneContacts.services.ContactService;
-
-import java.text.ParseException;
+import com.Task.phoneContacts.service.ContactService;
+import com.Task.phoneContacts.dto.*;
+ 
 import java.util.*;
 
 
@@ -65,7 +59,7 @@ public class ContactController {
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE) 
     @ResponseStatus(HttpStatus.OK)
-	public ContactDTO delete(@PathVariable("id") Long id) {
+	public boolean delete(@PathVariable("id") Long id) {
 		return contactService.deleteContactById(id);
 	}
 }

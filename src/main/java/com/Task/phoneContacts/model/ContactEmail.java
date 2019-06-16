@@ -1,4 +1,4 @@
-package com.Task.phoneContacts.entities;
+package com.Task.phoneContacts.model;
 
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ public class ContactEmail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private long id;
 
 //    @NotNull(message = "Email may not be null")
 //    @NotEmpty
@@ -35,11 +35,11 @@ public class ContactEmail {
     }
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public String getAddress() {
@@ -62,6 +62,6 @@ public class ContactEmail {
     public String toString() {
         return String.format(
                 "Phone[id=%d, address='%s']",
-                Id, address);
+                id, address);
     } 
 }

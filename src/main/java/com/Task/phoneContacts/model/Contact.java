@@ -1,10 +1,9 @@
-package com.Task.phoneContacts.entities;
+package com.Task.phoneContacts.model;
 
 import javax.persistence.*;
+import java.util.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set; 
 
 @Entity
 @Table(name = "Contact")
@@ -73,5 +72,22 @@ public class Contact {
         }
 
         return result;
+    }
+    
+    @Override
+    public int hashCode() {
+    	int hash = 0;
+    	hash ^=  name.hashCode();
+    	hash ^=  contactEmails.hashCode();
+        return hash;
+    }
+ 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        
+        Contact other = (Contact) obj;
+        return Objects.equals(id, other.getId());
     }
 }

@@ -1,4 +1,4 @@
-package com.Task.phoneContacts.errors;
+package com.Task.phoneContacts.error;
 
 public class ContactAlreadyExistsException extends RuntimeException {
 

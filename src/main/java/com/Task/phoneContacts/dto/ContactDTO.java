@@ -1,4 +1,4 @@
-package com.Task.phoneContacts.entities.ContactDTO;
+package com.Task.phoneContacts.dto;
 
 public class ContactDTO {
 	
