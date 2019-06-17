@@ -5,10 +5,13 @@ import java.util.Set;
 import com.Task.phoneContacts.model.*;
 import com.Task.phoneContacts.dto.ContactDTO;
 import com.Task.phoneContacts.error.*;
+import com.Task.phoneContacts.repository.AccountRepository;
 import com.Task.phoneContacts.repository.ContactRepository;
 import com.Task.phoneContacts.service.ContactService;
  
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
  
 import java.util.*;
@@ -16,6 +19,10 @@ import java.util.*;
 @Service
 public class ContactServiceImpl implements ContactService {
  
+//	@Autowired
+//    private AccountRepository accountRepository;
+	//Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	
     @Autowired
     private ContactRepository contactRepository;
  

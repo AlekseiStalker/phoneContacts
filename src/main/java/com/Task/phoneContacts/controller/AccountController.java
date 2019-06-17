@@ -3,6 +3,8 @@ package com.Task.phoneContacts.controller;
    
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*; 
@@ -10,6 +12,10 @@ import com.Task.phoneContacts.service.AccountService;
 import com.Task.phoneContacts.dto.*; 
 
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @RestController
@@ -25,7 +31,8 @@ public class AccountController {
         return "Welcome to regestration.";
     } 
      
-    @RequestMapping(value = "/createNewAcc", method = RequestMethod.POST)
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     public boolean signup(@RequestBody AccountDTO accountDTO) { 
     	return accountService.registerNewAccount(accountDTO);
     } 
@@ -33,10 +40,16 @@ public class AccountController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public boolean login(@RequestBody AccountDTO accountDTO) { 
     	return accountService.logIn(accountDTO);
-    }
+    } 
     
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public boolean logout(@RequestBody AccountDTO accountDTO) { 
-    	return accountService.logOut(accountDTO);
+    public boolean logout(@RequestBody AccountDTO accountDTO, HttpServletRequest request, HttpServletResponse response) { 
+    	accountService.logOut(accountDTO);
+    	
+    	HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    	return true;
     } 
 }

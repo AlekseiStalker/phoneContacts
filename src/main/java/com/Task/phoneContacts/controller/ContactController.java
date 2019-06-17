@@ -3,6 +3,8 @@ package com.Task.phoneContacts.controller;
    
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.Task.phoneContacts.service.ContactService;
@@ -30,7 +32,7 @@ public class ContactController {
     int countAll() {
         return contactService.getContacts().size();
     }
-
+    
     //----------------------------
     
     @RequestMapping(value = "/list", method = RequestMethod.GET)
