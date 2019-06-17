@@ -22,6 +22,10 @@ public class Contact {
 
 //    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private Set<ContactPhone> contactPhones;
+    
+//    @ManyToOne
+//    @JoinColumn(name = "contact_user_id")
+//    private User user;
 
     public Contact() {}
 
@@ -58,6 +62,15 @@ public class Contact {
 //    }
 //    public Set<ContactPhone> getContactPhones() {
 //        return contactPhones;
+//    }
+    
+
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
 //    }
     
     @Override

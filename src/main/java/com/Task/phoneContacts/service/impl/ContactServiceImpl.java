@@ -1,7 +1,5 @@
 package com.Task.phoneContacts.service.impl;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+ 
 import java.util.Set;
 
 import com.Task.phoneContacts.model.*;
@@ -17,9 +15,7 @@ import java.util.*;
 
 @Service
 public class ContactServiceImpl implements ContactService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
-	
+ 
     @Autowired
     private ContactRepository contactRepository;
  
