@@ -2,10 +2,10 @@ package com.Task.phoneContacts.service.impl;
  
 import com.Task.phoneContacts.model.*;
 import com.Task.phoneContacts.dto.ContactDTO;
+import com.Task.phoneContacts.dao.AccountDao;
+import com.Task.phoneContacts.dao.ContactDao;
 import com.Task.phoneContacts.dto.AccountDTO;
 import com.Task.phoneContacts.error.*;
-import com.Task.phoneContacts.repository.ContactRepository;
-import com.Task.phoneContacts.repository.AccountRepository;
 import com.Task.phoneContacts.service.ContactService;
 import com.Task.phoneContacts.service.AccountService;
 
@@ -33,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
     }
 	
 	@Autowired
-	private AccountRepository accountRepository;
+	private AccountDao accountDao;
 	
 	@Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -57,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
     	Account account = new Account();
     	account.setLogin(accountLogin); 
     	account.setPassword(encrytedPassword); 
-	    accountRepository.save(account); 
+	    accountDao.save(account); 
 	    
 	    saveAccountToLocalStorage(accountLogin, encrytedPassword);
 	    
@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	public boolean logIn(AccountDTO accountDto) {
-		Account account = accountRepository.findByLogin(accountDto.getLogin());
+		Account account = accountDao.findByLogin(accountDto.getLogin());
 		
 		if(account != null) {
 			String encrytedPassword = this.passwordEncoder().encode(accountDto.getPassword()); 
@@ -83,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
 	
 	public boolean logOut(AccountDTO accountDto) {
 		String accountLogin = accountDto.getLogin();
-		Account account = accountRepository.findByLogin(accountLogin);
+		Account account = accountDao.findByLogin(accountLogin);
 		
 		if(account != null) {  
 			boolean success = removeAccountFromLocalStorage(accountLogin);
@@ -95,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	 
 	private boolean isLoginExist(String userlogin) {
-		return accountRepository.findByLogin(userlogin) != null;
+		return accountDao.findByLogin(userlogin) != null;
 	} 
 	
 	private boolean saveAccountToLocalStorage(String accountLogin, String encrytedPassword) {

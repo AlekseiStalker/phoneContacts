@@ -1,10 +1,10 @@
-package com.Task.phoneContacts.repository;
+package com.Task.phoneContacts.dao;
 
 import org.springframework.data.repository.CrudRepository;
 
 import com.Task.phoneContacts.model.Account;
 
-public interface AccountRepository extends CrudRepository<Account, Long> {
+public interface AccountDao extends CrudRepository<Account, Long> {
 	
     Account findByLogin(String name); 
 }

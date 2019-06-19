@@ -3,10 +3,10 @@ package com.Task.phoneContacts.service.impl;
 import java.util.Set;
 
 import com.Task.phoneContacts.model.*;
+import com.Task.phoneContacts.dao.AccountDao;
+import com.Task.phoneContacts.dao.ContactDao;
 import com.Task.phoneContacts.dto.ContactDTO;
 import com.Task.phoneContacts.error.*;
-import com.Task.phoneContacts.repository.AccountRepository;
-import com.Task.phoneContacts.repository.ContactRepository;
 import com.Task.phoneContacts.service.ContactService;
  
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.*;
 public class ContactServiceImpl implements ContactService {
   
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactDao contactDao;
  
     @Override
     public ContactDTO createContact(ContactDTO contactDto) {  
@@ -29,14 +29,14 @@ public class ContactServiceImpl implements ContactService {
     	} 
     	
     	Contact createdContact = convertToEntity(contactDto);
-    	createdContact = contactRepository.save(createdContact);
+    	createdContact = contactDao.save(createdContact);
     	
         return convertToDto(createdContact); 
     } 
     
 	@Override
 	public ContactDTO getContactById(Long id) {
-		Optional<Contact> contact = contactRepository.findById(id); 
+		Optional<Contact> contact = contactDao.findById(id); 
 		
 		if (!contact.isPresent()) {
 			throw new ContactNotFoundException(id);
@@ -51,7 +51,7 @@ public class ContactServiceImpl implements ContactService {
 			throw new ContactAlreadyExistsException(contactDto.getName());
 		}
 
-		Contact contact = contactRepository.findById(id).get();
+		Contact contact = contactDao.findById(id).get();
 		 
 		if(!isEmailUnique(contact.getContactEmails(), contactDto.getEmails())) {
 			throw new EmailAlreadyExistsException();
@@ -62,14 +62,14 @@ public class ContactServiceImpl implements ContactService {
 		 
 		updateContactProperties(contactDto, contact);
 		 
-		Contact updatedContact = contactRepository.save(contact);
+		Contact updatedContact = contactDao.save(contact);
 		
 		return convertToDto(updatedContact);
 	}  
  
     @Override
     public List<ContactDTO> getContacts() {
-    	List<Contact> contacts = contactRepository.findAll();
+    	List<Contact> contacts = contactDao.findAll();
     	
     	List<ContactDTO> contatcsDto = new ArrayList<>();
     	for(Contact c : contacts)
@@ -80,8 +80,8 @@ public class ContactServiceImpl implements ContactService {
      
 	@Override
 	public boolean deleteContactById(Long id) {
-		Contact contact = contactRepository.findById(id).get();
-		contactRepository.deleteById(id);
+		Contact contact = contactDao.findById(id).get();
+		contactDao.deleteById(id);
 		return true;
 	} 
     
@@ -177,6 +177,6 @@ public class ContactServiceImpl implements ContactService {
     }
      
     private Contact findByContactName(String name) {
-        return contactRepository.findByName(name);
+        return contactDao.findByName(name);
     }
 }
