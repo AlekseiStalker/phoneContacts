@@ -17,11 +17,11 @@ public class ContactEmail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @NotNull(message = "Email may not be null")
-//    @NotEmpty
-//    @Email
-//    @Pattern(regexp = ".+@.+\\..+",
-//            message = "Please provide a valid email address")
+    @NotNull(message = "Email may not be null")
+    @NotEmpty
+    @Email
+    @Pattern(regexp = ".+@.+\\..+",
+            message = "Please provide a valid email address")
     private String address;
 
     @ManyToOne

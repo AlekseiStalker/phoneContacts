@@ -16,12 +16,12 @@ public class ContactPhone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @NotNull(message = "Phone may not be null")
-//    @NotEmpty
-//    @Size(min=10, max=13)
-//    @Pattern(regexp = "\\d{3}-?\\d{3}-?\\d{2}-?\\d{2}|" +
-//            "[+\\d{1,3}]?\\d{3}-?\\d{3}-?\\d{2}-?\\d{2}",
-//            message = "Please provide a valid phone number")
+    @NotNull(message = "Phone may not be null")
+    @NotEmpty
+    @Size(min=10, max=17)
+    @Pattern(regexp = "\\d{3}-?\\d{3}-?\\d{2}-?\\d{2}|" +
+            "^\\+\\d{1,2}-?\\d{3}-?\\d{3}-?\\d{2}-?\\d{2}",
+            message = "Please provide a valid phone number")
     private String number;
 
     @ManyToOne
