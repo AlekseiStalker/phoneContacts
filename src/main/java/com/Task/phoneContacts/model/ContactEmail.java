@@ -1,5 +1,6 @@
 package com.Task.phoneContacts.model;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
-@Table(name = "ContactEmail")
+@Table(name = "contactEmail")
 public class ContactEmail {
 
     @Id
@@ -77,7 +78,6 @@ public class ContactEmail {
         
         ContactEmail other = (ContactEmail) obj;
  
-        return this.address == other.getAddress();
-    }
-    
+        return Arrays.equals(this.address.toCharArray(), other.getAddress().toCharArray());
+    } 
 }

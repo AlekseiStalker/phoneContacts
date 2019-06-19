@@ -22,18 +22,16 @@ public class ContactController {
 	
 	//----------------------------
 	
-    @RequestMapping(value = "/test")
+    @RequestMapping(value = "")
     @ResponseBody
     public String index() {
-        return "Hello World!";
+        return "Welcome to contacts.";
     } 
    
     @RequestMapping(value = "/count", method = RequestMethod.GET) 
     int countAll() {
         return contactService.getContacts().size();
-    }
-    
-    //----------------------------
+    } 
     
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List<ContactDTO> list() {
@@ -46,7 +44,7 @@ public class ContactController {
         return contactService.createContact(contactDto);
     } 
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ContactDTO get(@PathVariable("id") Long id) {
     	return contactService.getContactById(id);
     }
@@ -57,7 +55,7 @@ public class ContactController {
 		return contactService.updateContactById(id, contactDto);
 	}
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE) 
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
     @ResponseStatus(HttpStatus.OK)
 	public boolean delete(@PathVariable("id") Long id) {
 		return contactService.deleteContactById(id);

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "user")
+@Table(name = "account")
 public class Account {
 	
 	@Id 
@@ -21,10 +21,7 @@ public class Account {
     @NotNull
     @Size(min = 1)
 	private String password;
-	
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<Contact> contacts;
-	
+	 
 	public Account() {}
 
 	public String getULogin() {

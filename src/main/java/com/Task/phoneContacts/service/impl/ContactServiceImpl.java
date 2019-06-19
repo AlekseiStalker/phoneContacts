@@ -18,11 +18,7 @@ import java.util.*;
 
 @Service
 public class ContactServiceImpl implements ContactService {
- 
-//	@Autowired
-//    private AccountRepository accountRepository;
-	//Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	
+  
     @Autowired
     private ContactRepository contactRepository;
  
@@ -60,7 +56,9 @@ public class ContactServiceImpl implements ContactService {
 		if(!isEmailUnique(contact.getContactEmails(), contactDto.getEmails())) {
 			throw new EmailAlreadyExistsException();
 		} 
-		//if() make for phones
+		if(!isPhoneUnique(contact.getContactPhones(), contactDto.getPhones())) {
+			throw new PhoneAlreadyExistsException();
+		}
 		 
 		updateContactProperties(contactDto, contact);
 		 
@@ -90,12 +88,17 @@ public class ContactServiceImpl implements ContactService {
     private Contact convertToEntity(ContactDTO contactDTO) {
     	Contact contact = new Contact(contactDTO.getName());  
     	Set<ContactEmail> contactEmails = new HashSet<>();
+    	Set<ContactPhone> contactPhones = new HashSet<>();
     	
     	for(String address : contactDTO.getEmails()) {
     		contactEmails.add(new ContactEmail(address, contact));
     	} 
+    	for(String number : contactDTO.getPhones()) {
+    		contactPhones.add(new ContactPhone(number, contact));
+    	} 
     	
     	contact.setContactEmails(contactEmails);
+    	contact.setContactPhones(contactPhones);
     	
         return contact;
     }
@@ -109,8 +112,14 @@ public class ContactServiceImpl implements ContactService {
         for(ContactEmail e: contact.getContactEmails()) {
         	contactEmails[i++] = e.getAddress();
         }
+        String contactPhones[] = new String[contact.getContactPhones().size()]; 
+        int j = 0;
+        for(ContactPhone e: contact.getContactPhones()) {
+        	contactPhones[j++] = e.getNumber();
+        }
         
         contactDto.setEmails(contactEmails);
+        contactDto.setPhones(contactPhones);
         
         return contactDto;
     }
@@ -123,8 +132,20 @@ public class ContactServiceImpl implements ContactService {
     	ContactEmail[] oldEmailsArr = oldEmails.toArray(new ContactEmail[0]);
     	List<String> newEmailsList = Arrays.asList(newEmails);
     	
-    	for(int i = 0; i < newEmails.length; i++) {
+    	for(int i = 0; i < oldEmailsArr.length; i++) {
     		if(newEmailsList.contains(oldEmailsArr[i].getAddress())) {
+    			return false;
+    		}
+    	}
+    	return true;
+    } 
+    
+    private boolean isPhoneUnique(Set<ContactPhone> oldPhones, String... newPhones) { 
+    	ContactPhone[] oldPhonesArr = oldPhones.toArray(new ContactPhone[0]);
+    	List<String> newPhonesList = Arrays.asList(newPhones);
+ 
+    	for(int i = 0; i < oldPhonesArr.length; i++) { 
+    		if(newPhonesList.contains(oldPhonesArr[i].getNumber())) { 
     			return false;
     		}
     	}
@@ -145,7 +166,14 @@ public class ContactServiceImpl implements ContactService {
     		oldContact.setContactEmails(contactEmails);
     	}
     	
-    	//make for phones
+    	if(newContact.getPhones().length != 0) {
+    		Set<ContactPhone> contactPhones = oldContact.getContactPhones(); 
+    		String[] newPhones = newContact.getPhones();
+    		for(int i = 0; i < newPhones.length; i++) {
+    			contactPhones.add(new ContactPhone(newPhones[i], oldContact));
+    		}
+    		oldContact.setContactPhones(contactPhones);
+    	}
     }
      
     private Contact findByContactName(String name) {

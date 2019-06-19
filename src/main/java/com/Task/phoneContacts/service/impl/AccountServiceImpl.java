@@ -116,17 +116,6 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	private boolean isStringEquals(String s1, String s2) {
-		if(s1.length() != s2.length()) {
-			return false;
-		}
-		for(int i = 0; i < s1.length(); i++) {
-			int s1_ch = (int)s1.charAt(i);
-			int s2_ch = (int)s2.charAt(i);
-			
-			if(s1_ch != s2_ch) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.equals(s1.toCharArray(), s2.toCharArray());
 	} 
 }

@@ -1,9 +1,13 @@
-//package com.Task.phoneContacts.errors;
-//
-//public class ContactAlreadyExistsException extends RuntimeException {
-//
-//    public ContactAlreadyExistsException(String name) {
-//        super("Contact id already exists : " + name);
-//    }
-//
-//}
+package com.Task.phoneContacts.error;
+
+public class PhoneAlreadyExistsException extends RuntimeException {
+
+	public PhoneAlreadyExistsException() {
+        super("Phone already exists.");
+    }
+    
+    public PhoneAlreadyExistsException(String address) {
+        super("Phone already exists: " + address);
+    }
+
+}

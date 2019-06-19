@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "Contact")
+@Table(name = "contact")
 public class Contact {
 
     @Id
@@ -20,20 +20,16 @@ public class Contact {
     @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ContactEmail> contactEmails;
 
-//    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<ContactPhone> contactPhones;
-    
-//    @ManyToOne
-//    @JoinColumn(name = "contact_user_id")
-//    private User user;
-
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ContactPhone> contactPhones;
+  
     public Contact() {}
 
     public Contact(String name) {
         this.name = name;
 
         contactEmails = new HashSet<>();
-        //contactPhones = new HashSet<>();
+        contactPhones = new HashSet<>();
     }
 
     public long getId() {
@@ -57,22 +53,13 @@ public class Contact {
         return contactEmails;
     }
 
-//    public void setcontactPhones(Set<ContactPhone> contactPhones) {
-//        this.contactPhones = contactPhones;
-//    }
-//    public Set<ContactPhone> getContactPhones() {
-//        return contactPhones;
-//    }
-    
-
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-    
+    public void setContactPhones(Set<ContactPhone> contactPhones) {
+        this.contactPhones = contactPhones;
+    }
+    public Set<ContactPhone> getContactPhones() {
+        return contactPhones;
+    }
+      
     @Override
     public String toString() {
     	String result = "Contact[id=" + id + " name=" + name + "]\n";
@@ -81,7 +68,10 @@ public class Contact {
             for(ContactEmail e : contactEmails) {
                 result += "{ " + e.getAddress() + " } ";
             }
-            //add phones
+            result += "phones: ";
+            for(ContactPhone e : contactPhones) {
+                result += "{ " + e.getNumber() + " } ";
+            }
         }
 
         return result;
@@ -101,9 +91,7 @@ public class Contact {
             return false;
         
         Contact other = (Contact) obj;
-
-        //return Objects.equals(id, other.getId());
-        
+ 
         if(this.contactEmails.size() != other.contactEmails.size()) {
         	return false;
         }

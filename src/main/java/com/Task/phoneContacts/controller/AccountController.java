@@ -27,7 +27,7 @@ public class AccountController {
 	 
 	@RequestMapping("")
     @ResponseBody
-    public String welcome() {
+    public String index() {
         return "Welcome to regestration.";
     } 
      
@@ -38,11 +38,13 @@ public class AccountController {
     } 
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
     public boolean login(@RequestBody AccountDTO accountDTO) { 
     	return accountService.logIn(accountDTO);
     } 
     
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
     public boolean logout(@RequestBody AccountDTO accountDTO, HttpServletRequest request, HttpServletResponse response) { 
     	accountService.logOut(accountDTO);
     	
